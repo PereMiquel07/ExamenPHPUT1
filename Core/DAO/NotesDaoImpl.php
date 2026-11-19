@@ -14,7 +14,11 @@ class NotesDaoImpl implements NotaDAO
     }
 
     public function getNota($id) {
+        $nota = $this->db->query("SELECT * FROM notes WHERE id = :id", [
+            'id' => $id,
+        ])->find();
 
+        return $nota ?? null;
     }
 
     public function getNotes()
