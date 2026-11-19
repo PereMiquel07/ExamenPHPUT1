@@ -31,4 +31,27 @@ class NotesDaoImpl implements NotaDAO
 
         return $notes ?? null;
     }
+
+    public function inserirNota($nota)
+    {
+        $this->db->query('INSERT INTO notes(body, user_id) VALUES(:body, :user_id)', [
+            'body' => $nota['body'],
+            'user_id' => getIdUsuari()
+        ]);
+    }
+
+    public function eliminarNota($id)
+    {
+        $this->db->query('DELETE FROM notes WHERE id = :id', [
+            'id' => $id,
+        ]);
+    }
+
+    public function actualitzarNota($nota, $id)
+    {
+        $this->db->query('UPDATE notes SET body = :body WHERE id = :id', [
+            'body' => $nota['body'],
+            'id' => $id,
+        ]);
+    }
 }
