@@ -2,6 +2,7 @@
 
 namespace notes;
 
+use Core\DAO\NotaDAO;
 use Core\DAO\NotaDaoFactory;
 use Core\Validator;
 
@@ -10,11 +11,11 @@ class NotesController
 
     private $errors = [];
 
-    private $accesNotes;
+    private NotaDAO $accesNotes;
 
     public function __construct()
     {
-        $this->accesNotes = NotaDaoFactory::class->getInstancia()->getNotaDAOImpl();
+        $this->accesNotes = NotaDaoFactory::getInstancia()->getNotaDAOImpl();
     }
     public function getNotes($default = [])
     {

@@ -16,7 +16,7 @@ class NotaDaoFactory
     }
 
     public static function getInstancia() {
-        if(!isset(self::$instancia)) {
+        if(!self::$instancia) {
             self::$instancia = new self();
         }
         return self::$instancia;
