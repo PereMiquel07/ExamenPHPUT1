@@ -20,15 +20,15 @@ class NotesController
     }
 
     //TODO:Mirar com passar o dur tema de s'user_id
-    public function getNotes($userId, $default = [])
+    public function getNotes($default = [])
     {
         $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
-            'user_id' => $userId,
+            'user_id' => getIdUsuari(),
         ])->find();
 
-        return view("notes/index.view.php", [
+        view("notes/index.view.php", [
             'heading' => 'My Notes',
-            'notes' => $notes ?? $default,
+            'notes' => $notes,
         ]);
     }
 
@@ -58,15 +58,14 @@ class NotesController
         return count($this->errors);
     }
 
-    public function afegirNota($nota, $userId)
+    public function afegirNota($nota)
     {
-        //Verificar si hi ha una nota realment?
 
         $this->validarBodyNota($nota['body']);
         if (! $this->hiHaErrors()) {
             $this->db->query('INSERT INTO notes(body, user_id) VALUES(:body, :user_id)', [
                 'body' => $nota['body'],
-                'user_id' => $userId
+                'user_id' => getIdUsuari()
             ]);
         }
 
