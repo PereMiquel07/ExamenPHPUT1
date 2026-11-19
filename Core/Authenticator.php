@@ -13,8 +13,15 @@ class Authenticator
 
         if ($user) {
             if (password_verify($password, $user['password'])) {
+
+                $id = App::resolve(Database::class)->
+                query("SELECT id FROM users WHERE email = :email", [
+                    'email' => $email,
+                ]);
+
                 $this->login([
-                    'email' => $email
+                    'email' => $email,
+                    'id' => $id,
                 ]);
 
                 return true;
@@ -27,7 +34,9 @@ class Authenticator
     public function login($user)
     {
         $_SESSION['user'] = [
-            'email' => $user['email']
+            'email' => $user['email'],
+            'id' => $user['id'],
+
         ];
 
         session_regenerate_id(true);

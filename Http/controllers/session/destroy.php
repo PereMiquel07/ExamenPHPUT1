@@ -1,6 +1,6 @@
 <?php
 
-logout();
+\Core\Authenticator::class->logout();
 
 header('location: /');
 exit();

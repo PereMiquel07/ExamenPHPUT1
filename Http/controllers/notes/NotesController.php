@@ -10,6 +10,8 @@ class NotesController
     private $db;
     private $errors = [];
 
+
+
     public function __construct()
     {
         $this->db = App::resolve(Database::class);
@@ -22,7 +24,10 @@ class NotesController
             'user_id' => $userId,
         ])->find();
 
-        return $notes ?? $default;
+        return view("notes/index.view.php", [
+            'heading' => 'My Notes',
+            'notes' => $notes ?? $default
+        ]);
     }
 
     public function getNota($id, $default = null)
