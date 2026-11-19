@@ -1,5 +1,7 @@
 <?php
 
+namespace Core\DAO;
+
 use Core\App;
 use Core\Database;
 
