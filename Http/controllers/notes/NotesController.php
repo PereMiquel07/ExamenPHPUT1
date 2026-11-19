@@ -18,7 +18,6 @@ class NotesController
     //TODO:Mirar com passar o dur tema de s'user_id
     public function getNotes($userId, $default = null)
     {
-
         $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
             'user_id' => $userId,
         ])->find();
@@ -48,12 +47,16 @@ class NotesController
         }
     }
 
+    private function hiHaErrors () {
+        return count($this->errors);
+    }
+
     public function afegirNota($nota, $userId)
     {
         //Verificar si hi ha una nota realment?
 
         $this->validarBodyNota($nota['body']);
-        if (count($this->errors()) == 0) {
+        if (! $this->hiHaErrors()) {
             $this->db->query('INSERT INTO notes(body, user_id) VALUES(:body, :user_id)', [
                 'body' => $nota['body'],
                 'user_id' => $userId
@@ -79,17 +82,15 @@ class NotesController
     {
         $this->validarBodyNota($nota['body']);
 
-        if (count($this->errors()) != 0) {
-            return $this->errors();
+        if (! $this->hiHaErrors()) {
+            if ($this->getNota($id)) {
+                $this->db->query('UPDATE notes SET body = :body WHERE id = :id', [
+                    'body' => $nota['body'],
+                    'id' => $id,
+                ]);
+            }
         }
-
-        if ($this->getNota($id)) {
-            $this->db->query('UPDATE notes SET body = :body WHERE id = :id', [
-                'body' => $nota['body'],
-                'id' => $id,
-            ]);
-        }
-
+        return $this->errors();
     }
 
 
