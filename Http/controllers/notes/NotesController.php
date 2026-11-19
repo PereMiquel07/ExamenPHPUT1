@@ -3,6 +3,7 @@
 namespace notes;
 
 use \Core\App;
+use Core\DAO\NotaDaoFactory;
 use Core\Database;
 use Core\Validator;
 
@@ -11,11 +12,15 @@ class NotesController
 
     private $errors = [];
 
+    private $accesNotes;
+
+    public function __construct()
+    {
+        $this->accesNotes = NotaDaoFactory::class->getInstancia()->getNotaDAOImpl();
+    }
     public function getNotes($default = [])
     {
-        $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
-            'user_id' => getIdUsuari(),
-        ])->find();
+        $notes = $this->accesNotes->getNotes();
 
         return $notes ?? $default;
     }
@@ -23,9 +28,7 @@ class NotesController
     public function getNota($id, $default = null)
     {
 
-        $nota = $this->db->query("SELECT * FROM notes WHERE id = :id", [
-            'id' => $id,
-        ])->find();
+        $nota = $this->accesNotes->getNota($id);
 
         return $nota ?? $default;
     }

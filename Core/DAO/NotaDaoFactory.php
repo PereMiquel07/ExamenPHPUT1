@@ -6,6 +6,11 @@ class NotaDaoFactory
 
     private static $instancia;
 
+    public function __construct()
+    {
+
+    }
+
     public static function setFactory (NotaDAO $class) {
         self::$instancia = $class;
     }
@@ -15,6 +20,11 @@ class NotaDaoFactory
             self::$instancia = new self();
         }
         return self::$instancia;
+    }
+
+    public function getNotaDAOImpl ()
+    {
+        return new NotesDaoImpl();
     }
 
 }
