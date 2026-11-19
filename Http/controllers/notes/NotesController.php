@@ -2,9 +2,7 @@
 
 namespace notes;
 
-use \Core\App;
 use Core\DAO\NotaDaoFactory;
-use Core\Database;
 use Core\Validator;
 
 class NotesController
@@ -53,10 +51,7 @@ class NotesController
     {
         $this->validarBodyNota($nota['body']);
         if (! $this->hiHaErrors()) {
-            $this->db->query('INSERT INTO notes(body, user_id) VALUES(:body, :user_id)', [
-                'body' => $nota['body'],
-                'user_id' => getIdUsuari()
-            ]);
+            $this->accesNotes->inserirNota($nota);
             redirect('/notes');
         }
     }
@@ -65,9 +60,7 @@ class NotesController
     {
         //Llençar excepcio en cas de no trobar?
         if ($this->getNota($id)) {
-            $this->db->query('DELETE FROM notes WHERE id = :id', [
-                'id' => $id,
-            ]);
+            $this->accesNotes->eliminarNota($id);
             return true;
         }
         return false;
@@ -79,10 +72,7 @@ class NotesController
 
         if (! $this->hiHaErrors()) {
             if ($this->getNota($id)) {
-                $this->db->query('UPDATE notes SET body = :body WHERE id = :id', [
-                    'body' => $nota['body'],
-                    'id' => $id,
-                ]);
+                $this->accesNotes->actualitzarNota($nota, $id);
             }
         }
         return $this->errors();
