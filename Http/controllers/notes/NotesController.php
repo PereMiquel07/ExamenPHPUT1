@@ -9,27 +9,15 @@ use Core\Validator;
 class NotesController
 {
 
-    private $db;
     private $errors = [];
 
-
-
-    public function __construct()
-    {
-        $this->db = App::resolve(Database::class);
-    }
-
-    //TODO:Mirar com passar o dur tema de s'user_id
     public function getNotes($default = [])
     {
         $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
             'user_id' => getIdUsuari(),
         ])->find();
 
-        view("notes/index.view.php", [
-            'heading' => 'My Notes',
-            'notes' => $notes,
-        ]);
+        return $notes ?? $default;
     }
 
     public function getNota($id, $default = null)
@@ -60,16 +48,14 @@ class NotesController
 
     public function afegirNota($nota)
     {
-
         $this->validarBodyNota($nota['body']);
         if (! $this->hiHaErrors()) {
             $this->db->query('INSERT INTO notes(body, user_id) VALUES(:body, :user_id)', [
                 'body' => $nota['body'],
                 'user_id' => getIdUsuari()
             ]);
+            redirect('/notes');
         }
-
-        return $this->errors();
     }
 
     public function borrarNota($id)

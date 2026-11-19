@@ -5,4 +5,9 @@ use notes\NotesController;
 
 $controller = new NotesController();
 
-$controller->getNotes();
+$notes = $controller->getNotes();
+
+view("notes/index.view.php", [
+    'heading' => 'My Notes',
+    'notes' => $notes
+]);
