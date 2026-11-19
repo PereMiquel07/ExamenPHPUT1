@@ -17,7 +17,8 @@ class NotesController
     {
         $this->accesNotes = NotaDaoFactory::getInstancia()->getNotaDAOImpl();
     }
-    public function index($default = [])
+
+    public function index()
     {
         $notes = $this->accesNotes->getNotes();
 
@@ -27,7 +28,7 @@ class NotesController
         ]);
     }
 
-    public function show($id, $default = null)
+    public function show($id)
     {
         $nota = $this->accesNotes->getNota($id);
 
@@ -51,14 +52,15 @@ class NotesController
         }
     }
 
-    private function hiHaErrors () {
+    private function hiHaErrors()
+    {
         return count($this->errors);
     }
 
     public function store($nota)
     {
         $this->validarBodyNota($nota['body']);
-        if (! $this->hiHaErrors()) {
+        if (!$this->hiHaErrors()) {
             $this->accesNotes->inserirNota($nota);
             redirect('/notes');
         }
@@ -70,7 +72,7 @@ class NotesController
 
     public function destroy($id)
     {
-        $nota = $this->getNota($id);
+        $nota = $this->accesNotes->getNota($id);
         if ($nota !== null) {
             authorize($nota['user_id'] === getIdUsuari());
             $this->accesNotes->eliminarNota($id);
@@ -79,22 +81,42 @@ class NotesController
         }
     }
 
-    public function edit($nota, $id)
+    public function edit()
     {
+        $note = $this->accesNotes->getNota($_GET['id']);
+
+        authorize($note['user_id'] === getIdUsuari());
+
+        view("notes/edit.view.php", [
+            'heading' => 'Edit Note',
+            'errors' => [],
+            'note' => $note
+        ]);
+    }
+
+    public function update()
+    {
+        $nota = $this->accesNotes->getNota($_POST['id']);
+
         authorize($nota['user_id'] === getIdUsuari());
         $this->validarBodyNota($nota['body']);
 
-
-        if (! $this->hiHaErrors()) {
-            if ($this->getNota($id)) {
-                $this->accesNotes->actualitzarNota($nota, $id);
-                redirect('/notes');
-            }
+        if (!$this->hiHaErrors()) {
+            $this->accesNotes->actualitzarNota($nota, $_POST['id']);
+            redirect('/notes');
         }
         return view('notes/edit.view.php', [
             'heading' => 'Edit Note',
             'errors' => $this->errors,
             'note' => $nota
+        ]);
+    }
+
+    public function create()
+    {
+        view("notes/create.view.php", [
+            'heading' => 'Create Note',
+            'errors' => []
         ]);
     }
 }
