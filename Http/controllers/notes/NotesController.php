@@ -1,5 +1,7 @@
 <?php
 
+namespace notes;
+
 use \Core\App;
 use Core\Database;
 use Core\Validator;
@@ -18,7 +20,7 @@ class NotesController
     }
 
     //TODO:Mirar com passar o dur tema de s'user_id
-    public function getNotes($userId, $default = null)
+    public function getNotes($userId, $default = [])
     {
         $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
             'user_id' => $userId,
@@ -26,7 +28,7 @@ class NotesController
 
         return view("notes/index.view.php", [
             'heading' => 'My Notes',
-            'notes' => $notes ?? $default
+            'notes' => $notes ?? $default,
         ]);
     }
 
