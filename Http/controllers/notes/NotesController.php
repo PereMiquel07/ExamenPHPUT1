@@ -22,7 +22,7 @@ class NotesController
     {
         $notes = $this->accesNotes->getNotes();
 
-        view("notes/index.view.php", [
+        return view("notes/index.view.php", [
             'heading' => 'My Notes',
             'notes' => $notes
         ]);
