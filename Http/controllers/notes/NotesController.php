@@ -60,11 +60,15 @@ class NotesController
         return count($this->errors);
     }
 
-    public function store($nota)
+    public function store()
     {
-        $this->validarBodyNota($nota['body']);
+
+        $this->validarBodyNota($_POST['body']);
+
         if (!$this->hiHaErrors()) {
-            $this->accesNotes->inserirNota($nota);
+            $this->accesNotes->inserirNota([
+                'body' => $_POST['body'],
+            ]);
             redirect('/notes');
         }
         return view("notes/create.view.php", [
@@ -73,9 +77,12 @@ class NotesController
         ]);
     }
 
-    public function destroy($id)
+    public function destroy()
     {
+
+        $id = $_POST['id'];
         $nota = $this->accesNotes->getNota($id);
+
         if ($nota !== null) {
             authorize($nota['user_id'] === getIdUsuari());
             $this->accesNotes->eliminarNota($id);
