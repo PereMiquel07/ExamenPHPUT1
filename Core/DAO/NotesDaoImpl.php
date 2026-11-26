@@ -27,7 +27,7 @@ class NotesDaoImpl implements NotaDAO
     {
         $notes = $this->db->query("SELECT * FROM notes WHERE user_id = :user_id", [
             'user_id' => getIdUsuari(),
-        ])->find();
+        ])->get();
 
         return $notes ?? null;
     }

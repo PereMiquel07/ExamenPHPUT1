@@ -22,14 +22,17 @@ class NotesController
     {
         $notes = $this->accesNotes->getNotes();
 
+
+
         return view("notes/index.view.php", [
             'heading' => 'My Notes',
             'notes' => $notes
         ]);
     }
 
-    public function show($id)
+    public function show()
     {
+        $id = $_GET['id'];
         $nota = $this->accesNotes->getNota($id);
 
         authorize($nota['user_id'] === getIdUsuari());
