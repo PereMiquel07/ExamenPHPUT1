@@ -109,10 +109,13 @@ class NotesController
         $nota = $this->accesNotes->getNota($_POST['id']);
 
         authorize($nota['user_id'] === getIdUsuari());
-        $this->validarBodyNota($nota['body']);
+        $this->validarBodyNota($_POST['body']);
 
         if (!$this->hiHaErrors()) {
-            $this->accesNotes->actualitzarNota($nota, $_POST['id']);
+            $this->accesNotes->actualitzarNota([
+                'body' => $_POST['body'],
+                'id' => $_POST['id'],
+            ]);
             redirect('/notes');
         }
         return view('notes/edit.view.php', [

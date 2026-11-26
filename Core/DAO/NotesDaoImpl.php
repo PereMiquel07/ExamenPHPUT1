@@ -47,11 +47,11 @@ class NotesDaoImpl implements NotaDAO
         ]);
     }
 
-    public function actualitzarNota($nota, $id)
+    public function actualitzarNota($nota)
     {
         $this->db->query('UPDATE notes SET body = :body WHERE id = :id', [
             'body' => $nota['body'],
-            'id' => $id,
+            'id' => $nota['id'],
         ]);
     }
 }
